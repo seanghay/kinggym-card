@@ -29,7 +29,7 @@ export async function createCard({ name, expiration, profileUrl }) {
   ctx.fillStyle = '#ff6e6e';
   ctx.fillRect(0, 350, canvas.width, 60);
   ctx.fillStyle = 'white';
-  ctx.font = 'bold 44px sans-serif';
+  ctx.font = 'bold 44px Noto Sans Khmer sans-serif';
 
   const textWidth = ctx.measureText(name).width;
   ctx.fillText(name, (canvas.width - textWidth) / 2, 350 + 15);
@@ -39,7 +39,7 @@ export async function createCard({ name, expiration, profileUrl }) {
   ctx.fillRect(0, 350 + 60, canvas.width, 60);
 
   ctx.fillStyle = 'white';
-  ctx.font = 'bold 32px sans-serif';
+  ctx.font = 'bold 32px Noto Sans Khmer, sans-serif';
 
   const textWidthExpiration = ctx.measureText(expiration).width;
   ctx.fillText(expiration, (canvas.width - textWidthExpiration) / 2, 350 + 60 + 20);
