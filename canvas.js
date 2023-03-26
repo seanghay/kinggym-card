@@ -27,8 +27,16 @@ export async function createCard({
 
   if (profileUrl) {
     const profile = await loadImage(profileUrl);
+    const imageSize = 250
+    ctx.save()
+    ctx.beginPath()
+    ctx.arc(imageSize / 2, imageSize / 2, 130, 0, Math.PI * 2, false)
+    ctx.clip()
+    // ctx.drawImage(img, 0, 0, 300, 300)
     ctx.drawImage(profile, 420, 50, 250, 250);
+    ctx.restore()
   }
+
 
   // name
   ctx.fillStyle = '#ff6e6e';
@@ -36,7 +44,7 @@ export async function createCard({
 
   ctx.fillRect(0, 350, canvas.width, rectSize);
   ctx.fillStyle = 'white';
-  ctx.font = `700 ${Math.round(rectSize * .5)}px Kantumruy Pro, sans-serif`;
+  ctx.font = `bold ${Math.round(rectSize * .5)}px Kantumruy Pro, sans-serif`;
 
   const metrics = ctx.measureText(name);
   ctx.fillText(name, (canvas.width - metrics.width) / 2,
@@ -48,7 +56,7 @@ export async function createCard({
   ctx.fillRect(0, 350 + rectSize, canvas.width, rectSize2);
 
   ctx.fillStyle = 'white';
-  ctx.font = '700 32px Kantumruy Pro, sans-serif';
+  ctx.font = 'bold 32px Kantumruy Pro, sans-serif';
 
   const metrics2 = ctx.measureText(expiration);
 
@@ -67,3 +75,19 @@ export async function createCard({
 
   return canvas.toBuffer('image/png');
 }
+
+
+function roundedImage(ctx, x, y, width, height, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+}
+
