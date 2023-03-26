@@ -40,10 +40,18 @@ bot.on(message('text'), async (ctx) => {
     profileUrl,
     link: "https://t.me/KingGymMembersBot?start=" + encodeURIComponent(JSON.stringify({ name, expiration }))
   });
-  
+
   await ctx.replyWithPhoto({ source: buffer }, {
     disable_notification: true,
   });
+  await ctx.replyWithDocument({
+    source: buffer,
+    filename: `${name}-${expiration}.png`
+  }, {
+    disable_notification: true,
+  });
+
+
 
 });
 

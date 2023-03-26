@@ -63,7 +63,6 @@ export async function createCard({
   ctx.fillStyle = 'white';
   const margin = 0
   ctx.fillRect(margin, qrcodeTop, canvas.width - (margin * 2), canvas.height - qrcodeTop - margin);
-
   ctx.drawImage(qrcodeImage, (canvas.width - qrcodeSize) / 2,
     qrcodeTop + (canvas.height - qrcodeTop - qrcodeSize) / 2,
     qrcodeSize, qrcodeSize
