@@ -2,10 +2,9 @@ import 'dotenv/config.js';
 import { Telegraf } from 'telegraf';
 import { message } from 'telegraf/filters'
 import { createCard } from './canvas.js'
+import sanitize from "sanitize-filename";
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
-
-
 
 bot.start((ctx) => ctx.reply("Welcome to the membership bot!"))
 bot.on(message('sticker'), (ctx) => ctx.reply('✋'));
@@ -46,7 +45,7 @@ bot.on(message('text'), async (ctx) => {
   });
   await ctx.replyWithDocument({
     source: buffer,
-    filename: `${name}-${expiration}.png`
+    filename: sanitize(`${name}-${expiration}`) + '.png'
   }, {
     disable_notification: true,
   });

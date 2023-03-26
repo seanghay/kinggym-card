@@ -6,6 +6,7 @@
     "dotenv": "^16.0.3",
     "piscina": "^3.2.0",
     "qrcode": "^1.5.1",
+    "sanitize-filename": "^1.6.3",
     "telegraf": "^4.12.2"
   },
   "devDependencies": {
