@@ -16,7 +16,7 @@ bot.on(message('text'), async (ctx) => {
   if (profile.photos.length > 0) {
     const items = profile.photos[profile.photos.length - 1];
     if (items.length > 0) {
-      const file = items[items.length - 1];
+      const file = items[0];
       const url = await ctx.telegram.getFileLink(file.file_id);
       if (url) {
         profileUrl = url.href;
@@ -31,13 +31,14 @@ bot.on(message('text'), async (ctx) => {
   }
 
   if (expiration) {
-    expiration = `EXPIRES: ` + expiration.trim().toUpperCase();
+    expiration = `EXPIRE: ` + expiration.trim().toUpperCase();
   }
 
   const buffer = await createCard({
     name: name || "EMPTY",
     expiration: expiration || "EMPTY",
-    profileUrl
+    profileUrl,
+    link: "https://t.me/KingGymMembersBot?start=" + encodeURIComponent(JSON.stringify({ name, expiration }))
   });
 
   await ctx.replyWithPhoto({

@@ -1,11 +1,16 @@
-import fs from 'node:fs/promises'
 import path from 'node:path'
 import { createCanvas, loadImage, GlobalFonts } from '@napi-rs/canvas';
 import qrcode from 'qrcode';
 
-export async function createCard({ name, expiration, profileUrl }) {
+GlobalFonts.loadFontsFromDir(path.join(process.cwd(), 'fonts'));
 
-  GlobalFonts.loadFontsFromDir(path.join(process.cwd(), 'fonts'));
+export async function createCard({
+  link, 
+  name, 
+  expiration, 
+  profileUrl
+}) {
+
   const bg = await loadImage(path.join(process.cwd(), "kinggym.png"))
   const canvas = createCanvas(bg.width, bg.height);
   const ctx = canvas.getContext('2d');
@@ -17,8 +22,8 @@ export async function createCard({ name, expiration, profileUrl }) {
   ctx.textBaseline = 'top';
 
   // profile photo
-  ctx.fillStyle = 'white';
-  ctx.fillRect(420, 50, 250, 250);
+  // ctx.fillStyle = 'white';
+  // ctx.fillRect(420, 50, 250, 250);
 
   if (profileUrl) {
     const profile = await loadImage(profileUrl);
@@ -27,32 +32,38 @@ export async function createCard({ name, expiration, profileUrl }) {
 
   // name
   ctx.fillStyle = '#ff6e6e';
-  ctx.fillRect(0, 350, canvas.width, 60);
-  ctx.fillStyle = 'white';
-  ctx.font = 'bold 44px Noto Sans Khmer sans-serif';
+  const rectSize = 80
 
-  const textWidth = ctx.measureText(name).width;
-  ctx.fillText(name, (canvas.width - textWidth) / 2, 350 + 15);
+  ctx.fillRect(0, 350, canvas.width, rectSize);
+  ctx.fillStyle = 'white';
+  ctx.font = `700 ${Math.round(rectSize * .5)}px Kantumruy Pro, sans-serif`;
+
+  const metrics = ctx.measureText(name);
+  ctx.fillText(name, (canvas.width - metrics.width) / 2,
+    350 + (rectSize / 2) - (metrics.fontBoundingBoxDescent - metrics.fontBoundingBoxAscent) / 2);
 
   // expiration
+  const rectSize2 = 60
   ctx.fillStyle = '#ffa7a7';
-  ctx.fillRect(0, 350 + 60, canvas.width, 60);
+  ctx.fillRect(0, 350 + rectSize, canvas.width, rectSize2);
 
   ctx.fillStyle = 'white';
-  ctx.font = 'bold 32px Noto Sans Khmer, sans-serif';
+  ctx.font = '700 32px Kantumruy Pro, sans-serif';
 
-  const textWidthExpiration = ctx.measureText(expiration).width;
-  ctx.fillText(expiration, (canvas.width - textWidthExpiration) / 2, 350 + 60 + 20);
+  const metrics2 = ctx.measureText(expiration);
 
+  ctx.fillText(expiration, (canvas.width - metrics2.width) / 2, 350 + rectSize +
+    (rectSize2 / 2) - (metrics2.fontBoundingBoxDescent - metrics2.fontBoundingBoxAscent) / 2
+  );
+
+  const qrcodeTop = 350 + rectSize + rectSize2;
   const qrcodeSize = 300;
-  const qrcodeImage = await loadImage(await qrcode.toBuffer(name, { width: qrcodeSize }));
+  const qrcodeImage = await loadImage(await qrcode.toBuffer(link, { width: qrcodeSize }));
 
-  ctx.fillStyle = 'white'
-  ctx.fillRect((canvas.width - qrcodeSize) / 2, 550, qrcodeSize, qrcodeSize);
-  ctx.drawImage(qrcodeImage, (canvas.width - qrcodeSize) / 2, 550, qrcodeSize, qrcodeSize);
+  ctx.drawImage(qrcodeImage, (canvas.width - qrcodeSize) / 2,
+    qrcodeTop + (canvas.height - qrcodeTop - qrcodeSize) / 2,
+    qrcodeSize, qrcodeSize
+  );
 
   return canvas.toBuffer('image/png');
 }
-
-
-// await fs.writeFile("image.png", await createCard())
