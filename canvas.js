@@ -27,16 +27,8 @@ export async function createCard({
 
   if (profileUrl) {
     const profile = await loadImage(profileUrl);
-    const imageSize = 250
-    ctx.save()
-    ctx.beginPath()
-    ctx.arc(imageSize / 2, imageSize / 2, 130, 0, Math.PI * 2, false)
-    ctx.clip()
-    // ctx.drawImage(img, 0, 0, 300, 300)
     ctx.drawImage(profile, 420, 50, 250, 250);
-    ctx.restore()
   }
-
 
   // name
   ctx.fillStyle = '#ff6e6e';
@@ -75,19 +67,3 @@ export async function createCard({
 
   return canvas.toBuffer('image/png');
 }
-
-
-function roundedImage(ctx, x, y, width, height, radius) {
-  ctx.beginPath();
-  ctx.moveTo(x + radius, y);
-  ctx.lineTo(x + width - radius, y);
-  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-  ctx.lineTo(x + width, y + height - radius);
-  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-  ctx.lineTo(x + radius, y + height);
-  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-  ctx.lineTo(x, y + radius);
-  ctx.quadraticCurveTo(x, y, x + radius, y);
-  ctx.closePath();
-}
-
