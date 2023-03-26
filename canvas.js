@@ -5,9 +5,9 @@ import qrcode from 'qrcode';
 GlobalFonts.loadFontsFromDir(path.join(process.cwd(), 'fonts'));
 
 export async function createCard({
-  link, 
-  name, 
-  expiration, 
+  link,
+  name,
+  expiration,
   profileUrl
 }) {
 
@@ -59,6 +59,10 @@ export async function createCard({
   const qrcodeTop = 350 + rectSize + rectSize2;
   const qrcodeSize = 300;
   const qrcodeImage = await loadImage(await qrcode.toBuffer(link, { width: qrcodeSize }));
+
+  ctx.fillStyle = 'white';
+  const margin = 44
+  ctx.fillRect(margin, qrcodeTop, canvas.width - (margin * 2), canvas.height - qrcodeTop - margin);
 
   ctx.drawImage(qrcodeImage, (canvas.width - qrcodeSize) / 2,
     qrcodeTop + (canvas.height - qrcodeTop - qrcodeSize) / 2,
